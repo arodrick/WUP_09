@@ -1,7 +1,7 @@
 ---
 title: "Weight of Fish"
-author: "Your Name"
-date: "Year 2020"
+author: "Amee Rodrick"
+date: "November 2020"
 output: 
   html_document:
     number_sections: true
@@ -22,15 +22,42 @@ require(tidyverse)
 ## Using only two predictor variables  
 
 
-# Methods
-
+# Perch Model
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
 
-#Results
+
+```{r}
+# read in the fish
+fishdata <- read.csv(file="Fish.csv", header=TRUE)
+Perchdata <- filter(fishdata,Species=="Perch") %>% select(-Species)
+```
+
+Now Build our Models 
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Perchdata,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+### The best two regressors model for Perch is Height and Width.This is also the best overall model as measured by the Adjusted R-squared.
+
+
+# Bream Model
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
 
-## Descriptive Results
+## Smelt Model
 
 ### Graphical Descriptive Results
 
@@ -45,6 +72,6 @@ require(tidyverse)
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
 
-# Discussion and Conclusion
+# Discussion and  Final Conclusion
 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
