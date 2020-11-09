@@ -79,9 +79,34 @@ library(car)
 subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
 ```
 
-## The best three regressor model for Bream is Length1 and Height and Width. This is the best overall model for the Adjusted R-squared. 
+### The best three regressor model for Bream is Length2 and Height at about 92%. This is the best overall model for the Adjusted R-squared. 
 
 ## Smelt Model
+
+```{r}
+# read in the fish
+fishdata <- read.csv(file="Fish.csv", header=TRUE)
+Smeltdata <- filter(fishdata,Species=="Smelt") %>% select(-Species)
+```
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Smeltdata,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+### The best two regressors models for Smelt is Length2 and Width at about 97% This is the best overall model for Adjusted R-squared..
+
 
 ### Graphical Descriptive Results
 
