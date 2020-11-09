@@ -57,6 +57,30 @@ subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
 
+```{r}
+# read in the fish
+fishdata <- read.csv(file="Fish.csv", header=TRUE)
+Breamdata <- filter(fishdata,Species=="Bream") %>% select(-Species)
+```
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Breamdata,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+## The best three regressor model for Bream is Length1 and Height and Width. This is the best overall model for the Adjusted R-squared. 
+
 ## Smelt Model
 
 ### Graphical Descriptive Results
